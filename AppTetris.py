@@ -37,10 +37,10 @@ header = """
 
     <script language="javascript" type="text/javascript">
         var game = null;
-        
+
         $(document).ready(function(){
             $('input[title!=""]').hint();
-            
+
             $().ajaxSend(function(r,s){
                 $("#contentLoading").css('visibility','');
             });
@@ -53,7 +53,7 @@ header = """
                 $.post("/save", {client_url: $('#client_url').val() }, play);
                 return false;
             });
-            
+
             $('#btnTest').click(function(){
                 $('#divBoard').stopTime();
                 return false;
@@ -61,7 +61,7 @@ header = """
 
             attachHistoryClick();
         });
-        
+
         function attachHistoryClick()
         {
             $('.history').click(function() {
@@ -72,12 +72,12 @@ header = """
                 return false;
             });
         }
-        
+
         function play()
         {
             $.post("/play", playCompleted);
         }
-        
+
         function playCompleted(result)
         {
             var game = eval('(' + result + ')');
@@ -92,13 +92,16 @@ header = """
                 showGame(game.gameResults);
             }
         }
-        
+
         function showGame(game)
         {
+            if (!game) {
+                return;
+            }
             $('#divBoard').stopTime();
             $('.row').empty();
             num = 0;
-            
+
             $('#divBoard').everyTime(200, function()
             {
                 var val = game[num];
@@ -106,7 +109,7 @@ header = """
                 num++;
             }, game.length);
         }
-        
+
         function copyPieceToFinalPosition(val)
         {
             var drops = 20 - val.dropY - 1;
@@ -157,7 +160,7 @@ class Registration(db.Model):
     topscore = db.IntegerProperty()
     topgame = db.ReferenceProperty(GameHistory)
 
-    
+
 class Root(webapp.RequestHandler):
     def get(self):
         self.response.out.write(header)
@@ -200,7 +203,7 @@ class Root(webapp.RequestHandler):
             </form>
             """ % client_url)
 
-            
+
         self.response.out.write("""
             <table border="0">
             <tr><td valign="top">
@@ -238,9 +241,9 @@ class Root(webapp.RequestHandler):
 
 def buildHistoryTable():
     gamehistories = db.GqlQuery("SELECT * FROM GameHistory WHERE owner = :1 ORDER BY datetime DESC LIMIT 10", users.get_current_user())
-    
+
     table = ""
-    
+
     if users.get_current_user():
         table = """<div id="divHistory"><table style="background-color:Black; padding: 0px; border: solid 1px red; font-family: monospace; color: white">"""
         table += """<tr><td>time (utc)</td> <td>score</td> <td>moves</td><tr>"""
@@ -261,7 +264,7 @@ def buildHistoryTable():
     table += """<tr><td>user</td> <td>score</td><tr>"""
     for registration in topscores:
         if registration.topscore is not None:
-            
+
             email = registration.owner.email
             default = "http://tetrisapp.appspot.com/static/j.png"
             size = 24
@@ -286,7 +289,7 @@ def buildHistoryTable():
 class GetHistoryTable(webapp.RequestHandler):
     def get(self):
         self.response.out.write(buildHistoryTable())
-        
+
 class GetGame(webapp.RequestHandler):
     def get(self):
         key = self.request.get('key')
@@ -304,7 +307,7 @@ class Debugging(webapp.RequestHandler):
 
         self.response.out.write("<table>")
 
-        
+
 class Save(webapp.RequestHandler):
     def post(self):
         registrations = db.GqlQuery("SELECT * FROM Registration WHERE owner = :1", users.get_current_user())
@@ -317,7 +320,7 @@ class Save(webapp.RequestHandler):
         registration.put()
 
 class Play(webapp.RequestHandler):
-        
+
     def post(self):
         registrations = db.GqlQuery("SELECT * FROM Registration WHERE owner = :1", users.get_current_user())
         registration  = registrations.get()
@@ -329,7 +332,7 @@ class Play(webapp.RequestHandler):
         totalscore = 0
         moves = 0
         batchmoves = 0
-        
+
         # we've been passed a key, load session from the database
         if key != '':
             gameHistory = GameHistory.get(key)
@@ -373,7 +376,7 @@ class Play(webapp.RequestHandler):
             totalscore += score
             moves += 1
             batchmoves += 1
-            
+
 
         if inplay and moves < 200:
             gameHistory.board_session = str(t.board)
@@ -393,7 +396,7 @@ class Play(webapp.RequestHandler):
             gameHistory.moves = moves
             gameHistory.game_complete = True
             gameHistory.put()
-            
+
             response = {}
             response['inplay'] = False
             response['gameResults'] = t.gameResults
@@ -414,7 +417,7 @@ class RandomClient(webapp.RequestHandler):
     def post(self):
         pos = random.choice(range(10))
         degrees = random.choice([0,90,180,270])
-        
+
         piece = self.request.get("piece")
         board = self.request.get("board")
 
