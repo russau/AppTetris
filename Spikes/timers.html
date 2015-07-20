@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Untitled Page</title>
+   <script src="jquery-1.2.6.min.js" language="javascript" type="text/javascript"></script>
+    <script src="jquery.timers.js" language="javascript" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        $(function() {
+
+ 
+
+            $(document).everyTime(1000, function(i) {
+                $('#divBoard').append('text');
+            }, 6);            
+        });
+    </script>    
+</head>
+<body>
+<div id='divBoard'>
+</div>
+</body>
+</html>

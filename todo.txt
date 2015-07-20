@@ -1,0 +1,28 @@
+valdation
+ * url textbox (sort of done)
+ * validate they've entered a URL?
+ * response from CGI - log the invalid response
+
+sample clients
+  - app engine python & asp.net - done
+
+high scores
+ * save score in game table
+ - display score as game plays
+
+
+last 5 games table
+ - json to replay the game
+ * any logged errors
+
+------------------------------------------
+| 200806110811	Score 20, Moves 5 _Play_ |
+| 200806110800  Exception: abcdef	 |
+------------------------------------------
+
+make it pretier
+ - ajax loading graphics
+ - prevent 'double game'
+ - 'game over'
+ - game replay - play/replay should interrupt playback
+ 

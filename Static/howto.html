@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Tetris Challenge - How to</title>
+    <link rel="shortcut icon" href="/favicon.ico" >
+    <link href="/static/style2.css" rel="Stylesheet" />
+</head>
+<body>
+
+    <p><img src="how_to.png" /></p>
+    <p><a href="/">Home</a></p>
+    <p>Write your auto player algorithm as a CGI.  Give me the URL, and I'll challenge your player.</p>
+    <p>An example interaction:</p>
+
+<table>
+<tr>
+<td valign="top">
+I send your CGI the next piece, plus the current board.
+<div style="width:400px; border:solid 1px red; padding: 4px">
+POST /random_client HTTP/1.1<br/>
+Content-Type: application/x-www-form-urlencoded<br/>
+<br/>
+piece=j&amp;board=.......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... ..........
+</div>
+</td>
+<td valign="top">
+
+Your CGI responds with the position and rotation degrees to drop the piece
+<div style="width:400px; border:solid 1px red; padding: 4px">
+position=8&amp;degrees=180
+</div>
+</td>
+<td>The board now looks like this:<br/><img src="/static/sample_board1.png"/></td>
+</tr>
+<tr>
+<td valign="top">
+Next piece..
+<div style="width:400px; border:solid 1px red; padding: 4px">
+POST /random_client HTTP/1.1<br/>
+Content-Type: application/x-www-form-urlencoded<br/>
+
+<br/>
+piece=l&amp;board=.......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... .......... ........jj ........j. ........j.
+</div>
+</td>
+<td valign="top">
+..the response.
+<div style="width:400px; border:solid 1px red; padding: 4px">
+position=2&amp;degrees=0
+</div>
+</td>
+<td>Getting the picture?<br/><img src="/static/sample_board2.png"/></td>
+</tr>
+
+</table>
+
+<h1>Sample Clients</h1>
+<p>Very simple demo algorithm:
+<ol>
+    <li>rotate the piece a random number of times</li>
+    <li>calculate the width of the rotated piece</li>
+    <li>calculate the height of each column on the board</li>
+    <li>find the group of n contiguous columns with the lowest max height, where n in the width of the rotated piece</li>
+</ol>
+</p>
+<p>App Engine Python client: <a href="PyClient.zip">PyClient.zip</a></p>
+<p>C# ASP.NET client: <a href="CsClient.zip">CsClient.zip</a></p>
+
+<h1>Reference</h1>
+
+           <h2>Limitations</h2>
+           <ul>
+            <li>Client needs to respond in within 5 seconds.
+            Google app engine limitation of URLFetch (<a href="http://googleappengine.blogspot.com/2008/11/sdk-116-released.html">SDK 1.1.7 Released</a>).
+            </li>
+            <li>The game finishes after 200 moves.  
+            The server processes 10 moves at a time, and returns to the browser, which trips up to the server again. 
+            This is to have the requests complete within the request limit (see <a href="http://code.google.com/appengine/docs/python/requestsandcgi.html">The Request Timer</a>).
+            It would be good if App Engine could
+            do this asynchronously (<a href="http://code.google.com/p/googleappengine/issues/detail?id=6">Issue 6</a>).</li>
+            
+            <li>Client can only be hosted on ports 80 (http) and port 443 (https).  URLFetch limitation (see <a href="http://code.google.com/appengine/docs/urlfetch/overview.html">Things To Know About urlfetch</a>).</li>
+           </ul>
+           
+           <h2>Scoring</h2>
+            <table>
+                <tr>
+                    <th>Rows</th>
+                    <th>Score</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>25</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>40</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>55</td>
+                </tr>
+            </table>           
+
+
+            <h2>Request POST "piece"</h2>
+            <table>
+                <tr>
+                    <td>i</td>
+                    <td><img src="/static/piece_i.png"/></td>
+                    <td>j</td>
+
+                    <td><img src="/static/piece_j.png"/></td>
+                    <td>l</td>
+                    <td><img src="/static/piece_l.png"/></td>
+                    <td>o</td>
+                    <td><img src="/static/piece_o.png"/></td>
+                    <td>s</td>
+                    <td><img src="/static/piece_s.png"/></td>
+
+                    <td>t</td>
+                    <td><img src="/static/piece_t.png"/></td>
+                    <td>z</td>
+                    <td><img src="/static/piece_z.png"/></td>
+                </tr>
+            </table>
+            
+            <h2>Request POST "board"</h2>
+
+            <p>Current board state. Delimited string starting at the top
+                    of the screen, rows space separated.  A dot represent an empty cell, a letter
+                    represents a block in the cell.</p>
+
+            <h2>Player Response</h2>
+            <p>Position of the column starting at 0,  and rotation to drop the block.  Your CGI response give the position and degrees
+            in a quersystring type format: position=&lt;position&gt;&amp;degrees=&lt;degrees&gt; </p>
+            
+            
+        
+</body>
+</html>
+

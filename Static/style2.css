@@ -1,0 +1,20 @@
+body { background-color: black; color: white }
+
+a { color: orange }
+
+h1  { font: verdana; font-size:smaller; font-weight: bold }
+h2  { font: verdana; font-size:smaller; font-style: italic}
+
+p, td, th, li { font: verdana; font-size:smaller }
+
+#dropper { position: absolute; height:100px; }
+.sq { position: absolute;  }
+.row { height:24px }
+
+input, button { font-size: x-large } 
+
+input.blur {
+	color: #999;
+}
+
+.error { color: red; }

@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Home</title>
+    <style type="text/css">
+        #dropper { position: absolute; height:100px; }
+        .sq { position: absolute;  }
+        .row { height:24px }
+    </style>
+    
+    <script src="jquery-1.2.6.min.js" language="javascript" type="text/javascript"></script>
+    <script src="jquery.timers.js" language="javascript" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+
+        //var boards = ["......................................................................................................................................................................................t........ttt......", "...........................................................................................................................................................................iiii.......t........ttt......", "...........................................................................................................................................................................iiii..j....t....j...ttt..jj..", "....................................................................................................................................................................zz.....iiiizzj....t....j...ttt..jj..", "................................................................................................................................................................lll.zz....liiiizzj....t....j...ttt..jj..", "..................................................................................................................................................t........ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "..............................................................................................................................................oo..t.....oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "................................................................................................................................j.........j...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "..........................................................................................................................oo....j...oo....j...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "........................................................................................................l.......lll.......oo....j...oo....j...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "........................................................................................................l.......lll.s.....oo..ssj...oo...sj...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "........................................................................................................l..zz...lll.s.zz..oo..ssj...oo...sj...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "......................................................................................oo........oo......l..zz...lll.s.zz..oo..ssj...oo...sj...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "..........................................................z........zz........z........oo........oo......l..zz...lll.s.zz..oo..ssj...oo...sj...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "...............................................jjj........zj.......zz........z........oo........oo......l..zz...lll.s.zz..oo..ssj...oo...sj...oo..tjj...oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "...............................................jjj........zj.......zz........z........oo........oo......l..zz...lll.s.zzi.oo..ssj.i.oo...sj.i.oo..tjj.i.oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "...............................................jjj........zj.......zz........z....zz..oo.....zz.oo......l..zz...lll.s.zzi.oo..ssj.i.oo...sj.i.oo..tjj.i.oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "...................................lll.......l.jjj........zj.......zz........z....zz..oo.....zz.oo......l..zz...lll.s.zzi.oo..ssj.i.oo...sj.i.oo..tjj.i.oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "....s.........ss.........s.........lll.......l.jjj........zj.......zz........z....zz..oo.....zz.oo......l..zz...lll.s.zzi.oo..ssj.i.oo...sj.i.oo..tjj.i.oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "....s.........ss.........s.........lll.......l.jjj........zj.oo....zz..oo....z....zz..oo.....zz.oo......l..zz...lll.s.zzi.oo..ssj.i.oo...sj.i.oo..tjj.i.oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "....s.........ss.........s.........lll..jjj..l.jjj..j.....zj.oo....zz..oo....z....zz..oo.....zz.oo......l..zz...lll.s.zzi.oo..ssj.i.oo...sj.i.oo..tjj.i.oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj..", "....s.........ss.........s.........lll..jjj..l.jjj..j.....zj.oo....zz..oo....z....zz..oo.....zz.oo......l..zz...lll.s.zzi.oo..ssj.i.oo...sj.i.oo..tjj.i.oo.ttt..lll.zz....liiiizzj....t....j...ttt..jj.."];
+
+        var game = [{ "deleteRows": [], "dropY": 0, "piece": [[1, 1, 1, 1]], "piecech": "i", "dropX": 0 }, { "deleteRows": [], "dropY": 1, "piece": [[1, 1, 1, 1]], "piecech": "i", "dropX": 0 }, { "deleteRows": [], "dropY": 4, "piece": [[0, 1], [1, 1], [0, 1]], "piecech": "t", "dropX": 1 }, { "deleteRows": [], "dropY": 0, "piece": [[1, 1, 1, 1]], "piecech": "i", "dropX": 4 }, { "deleteRows": [], "dropY": 1, "piece": [[1, 1, 1, 1]], "piecech": "i", "dropX": 4 }, { "deleteRows": [1, 0], "dropY": 1, "piece": [[1, 1], [1, 1]], "piecech": "o", "dropX": 8}]
+
+
+        function copyPieceToDiv(piece, div, dropX, top) {
+            for (var y = 0; y < piece.length; y++) {
+                for (var x = 0; x < piece[y].length; x++) {
+                    if (piece[y][x]) {
+                        var square = $('<img class="sq"/>').attr('src', 'o.png').css('top', y * 24 + top).css('left', x * 24 + dropX); // fixthis
+                        div.append(square);
+                    }
+                }
+            }
+        }
+
+        function showBoard(num) {
+            var val = game[num];
+            var boardnum = 0;
+            var height = 0;
+            var drops = 20 - val.dropY - 1;
+            $('#dropper').remove();
+            var dropper = $('<div/>').attr('id', 'dropper').css('top', 0).css('left', val.dropX * 24);
+            copyPieceToDiv(val.piece, dropper, 0, 0);
+
+            var dropcount = 0;
+            $('#divBoard').append(dropper);
+
+            if (drops > 0)
+                $('#divBoard').everyTime(200, function() {
+                    height = height + 24;
+                    $('#dropper').css('top', height);
+                    dropcount++;
+
+                    // we've hit the bottom
+                    if (dropcount == drops) {
+                        $('#dropper').remove();
+
+                        for (var y = 0; y < val.piece.length; y++) {
+                            for (var x = 0; x < val.piece[y].length; x++) {
+                                if (val.piece[y][x]) {
+                                    var square = $('<img class="sq"/>').attr('src', val.piecech + '.png').css('left', (x + val.dropX) * 24);
+                                    $('.row').eq(drops + y).append(square);
+                                }
+                            }
+                        }
+
+                        $.each(val.deleteRows, function(index, val) {
+                            $('.row').eq(19 - val).fadeOut("slow", function() {
+                                $('#divBoard').prepend($('<div class="row"></div>'));
+                            });
+                        });
+
+                        if (++num < game.length)
+                            showBoard(num);  //does this make the callstack huge?  it'd be nice if everyTime had a callback
+                    }
+                }, drops);
+        }
+
+        $(function() {
+            $('#test').click(function() {
+            });
+            showBoard(0);
+        });
+    </script>
+    
+</head>
+<body>
+
+<div style="width:240px; height:480px; background-color:Black; padding: 0px; border: solid 1px red; position:relative" id="divBoard">
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+<div class="row"></div>
+</div>
+<button id=test>Test</button>
+<div id="debug"></div>
+</body>
+</html>

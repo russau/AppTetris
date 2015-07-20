@@ -1,0 +1,17 @@
+application: tetrisapp-hrd
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+
+- url: /favicon.ico
+  static_files: Static/favicon.ico
+  upload: Static/favicon.ico
+  mime_type: image/x-icon
+
+- url: /static
+  static_dir: Static
+
+- url: /.*
+  script: AppTetris.py
