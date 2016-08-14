@@ -390,7 +390,7 @@ class Play(webapp.RequestHandler):
             response['key'] = str(gameHistory.key())
 
         else:
-            jsonResults = json.write(t.gameResults)
+            jsonResults = json.dumps(t.gameResults)
             gameHistory.game_data = jsonResults
             gameHistory.score = totalscore
             gameHistory.moves = moves
@@ -406,7 +406,7 @@ class Play(webapp.RequestHandler):
             registration.topgame = gameHistory
             registration.put()
 
-        self.response.out.write(json.write(response))
+        self.response.out.write(json.dumps(response))
 
 
 
